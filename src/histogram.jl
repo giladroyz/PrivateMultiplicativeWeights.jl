@@ -55,7 +55,7 @@ function initialize(queries::Queries, data::Histogram, ps::MWParameters)
     if ps.noisy_init
         # Noisy init incurs an additional `epsilon` privacy cost
         weights = zeros(Float64, histogram_length)
-        noise = rand(Laplace(0.0, 1/(num_samples*ps.epsilon*ps.init_budget)), histogram_length)
+        noise = rand(Laplace(0.0, 1/(num_samples*ps.epsilon*ps.iterations*ps.init_budget)), histogram_length)
         @simd for i = 1:histogram_length
              @inbounds weights[i] =
                  max(data.weights[i] + noise[i] - 1.0/(e*num_samples*ps.epsilon), 0.0)
@@ -68,7 +68,7 @@ function initialize(queries::Queries, data::Histogram, ps::MWParameters)
         synthetic = Histogram(weights/histogram_length)
     end
     real_answers = evaluate(queries, data)
-    scale = 2.0/(ps.epsilon*num_samples)
+    scale = 1.0/(ps.epsilon*num_samples)
     MWState(data, synthetic, queries, real_answers, Dict{Int, Float64}(), scale)
 end
 
