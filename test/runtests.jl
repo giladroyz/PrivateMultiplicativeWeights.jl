@@ -1,3 +1,5 @@
+push!(LOAD_PATH, abspath("./src/"))
+
 using PrivateMultiplicativeWeights
 using Hadamard
 using Test
